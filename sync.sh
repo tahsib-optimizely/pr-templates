@@ -3,4 +3,4 @@ shopt -s nullglob
 
 mkdir -p .github/
 mv -f ./$1/pull_request_template.md .github/pull_request_template.md
-mv -f "./$1"/* ../
+mv -f "./$1"/* ..
