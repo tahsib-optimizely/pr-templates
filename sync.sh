@@ -4,11 +4,11 @@ dir=${1}
 
 mkdir -p ../.github/
 
-pr-template=$(find ./$dir -type f -iname "pull_request_template*")
+prtemplate=$(find ./$dir -type f -iname "pull_request_template*")
 codeowners=$(find ./$dir -type f -iname "CODEOWNERS")
 
-if test ${pr-template}; then
-    mv -f ${pr-template} ../.github/pull_request_template.md
+if test ${prtemplate}; then
+    mv -f ${prtemplate} ../.github/pull_request_template.md
 fi
 
 if test ${codeowners}; then
