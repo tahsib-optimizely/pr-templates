@@ -12,6 +12,7 @@ runs:
   using: composite
   steps:
     - name: Update PR Templates
+      shell: bash
       run: | 
         git submodule add https://github.com/tahsib-optimizely/pr-templates.git pr-templates
         shopt -s dotglob
