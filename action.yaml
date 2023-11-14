@@ -2,9 +2,9 @@ name: 'Standardize Repository'
 description: 'Sync common files of repos'
 inputs:
   repo-type:
-  required: true
-  description: Repository Type
-  default: 'terraform'
+    required: true
+    description: Repository Type
+    default: 'terraform'
 
 runs:
   using: composite
