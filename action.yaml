@@ -14,9 +14,9 @@ runs:
     - name: Update PR Templates
       shell: bash
       run: | 
-        git submodule add https://github.com/tahsib-optimizely/pr-templates.git pr-templates
+        git submodule add https://github.com/tahsib-optimizely/sre-default-github-action.git sre-default
         shopt -s dotglob
-        dir=pr-templates/repo-types/${{ inputs.repo-type }}
+        dir=sre-default/repo-types/${{ inputs.repo-type }}
         
         mkdir -p .github/
 
@@ -24,7 +24,7 @@ runs:
         codeowners=$(find ./$dir -type f -iname "CODEOWNERS")
 
         if test ${prtemplate}; then
-            mv -f ${prtemplate} .github/pull_request_template.md
+            mv -f ${prtemplate} .github/PULL_REQUEST_TEMPLATE
         fi
 
         if test ${codeowners}; then
@@ -37,18 +37,18 @@ runs:
       shell: bash
       run: |
         echo "**** Cleaning up submodules ****"
-        git submodule deinit -f -- pr-templates    
-        git rm --cached pr-templates    
-        rm -rf .git/modules/pr-templates
+        git submodule deinit -f -- sre-default    
+        git rm --cached sre-default    
+        rm -rf .git/modules/sre-default
         rm -f .gitmodules
-        rm -rf pr-templates
+        rm -rf sre-default
         echo "**** Cleaning Complete! ****"
       
     - name: Push to new-pr-template branch
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        commit_message: pr-templates-updated
-        branch: new-pr-templates
+        commit_message: sre metadata updated
+        branch: update-sre-default
         create_branch: true
         push_options: --force
 
@@ -56,7 +56,7 @@ runs:
       uses: devops-infra/action-pull-request@v0.5.5
       with:
         github_token: ${{ inputs.test-action }}
-        source_branch: new-pr-templates
+        source_branch: update-sre-default
         target_branch: main
-        title: New Updates
+        title: SRE Metadata Updated
 
