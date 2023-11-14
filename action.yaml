@@ -5,6 +5,8 @@ inputs:
     required: true
     description: Repository Type
     default: 'terraform'
+  test-action:
+    required: true
 
 runs:
   using: composite
@@ -51,7 +53,7 @@ runs:
     - name: Create PR from new-pr-template branch
       uses: devops-infra/action-pull-request@v0.5.5
       with:
-        github_token: ${{ secrets.TEST_ACTION }}
+        github_token: ${{ inputs.TEST_ACTION }}
         source_branch: new-pr-templates
         target_branch: main
         title: New Updates
