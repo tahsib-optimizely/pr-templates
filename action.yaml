@@ -10,25 +10,25 @@ runs:
   using: composite
   steps:
     - name: Update PR Templates
-        run: | 
-          git submodule add https://github.com/tahsib-optimizely/pr-templates.git pr-templates
-          shopt -s dotglob
-          dir=pr-templates/${{ inputs.repo-type }}
-          
-          mkdir -p .github/
+      run: | 
+        git submodule add https://github.com/tahsib-optimizely/pr-templates.git pr-templates
+        shopt -s dotglob
+        dir=pr-templates/repo-types/${{ inputs.repo-type }}
+        
+        mkdir -p .github/
 
-          prtemplate=$(find ./$dir -type f -iname "pull_request_template*")
-          codeowners=$(find ./$dir -type f -iname "CODEOWNERS")
+        prtemplate=$(find ./$dir -type f -iname "pull_request_template*")
+        codeowners=$(find ./$dir -type f -iname "CODEOWNERS")
 
-          if test ${prtemplate}; then
-              mv -f ${prtemplate} .github/pull_request_template.md
-          fi
+        if test ${prtemplate}; then
+            mv -f ${prtemplate} .github/pull_request_template.md
+        fi
 
-          if test ${codeowners}; then
-              mv -f ${codeowners} .github/CODEOWNERS
-          fi
+        if test ${codeowners}; then
+            mv -f ${codeowners} .github/CODEOWNERS
+        fi
 
-          mv -f ./$dir/*  ./
+        mv -f ./$dir/*  ./
 
     - name: Clean Up Submodule
       run: |
