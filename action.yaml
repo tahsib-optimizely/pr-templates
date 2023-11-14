@@ -1,0 +1,58 @@
+name: 'Standardize Repository'
+description: 'Sync common files of repos'
+inputs:
+  repo-type:
+  required: true
+  description: Repository Type
+  default: 'terraform'
+
+runs:
+  using: composite
+  steps:
+    - name: Update PR Templates
+        run: | 
+          git submodule add https://github.com/tahsib-optimizely/pr-templates.git pr-templates
+          shopt -s dotglob
+          dir=pr-templates/${{ inputs.repo-type }}
+          
+          mkdir -p .github/
+
+          prtemplate=$(find ./$dir -type f -iname "pull_request_template*")
+          codeowners=$(find ./$dir -type f -iname "CODEOWNERS")
+
+          if test ${prtemplate}; then
+              mv -f ${prtemplate} .github/pull_request_template.md
+          fi
+
+          if test ${codeowners}; then
+              mv -f ${codeowners} .github/CODEOWNERS
+          fi
+
+          mv -f ./$dir/*  ./
+
+    - name: Clean Up Submodule
+      run: |
+        echo "**** Cleaning up submodules ****"
+        git submodule deinit -f -- pr-templates    
+        git rm --cached pr-templates    
+        rm -rf .git/modules/pr-templates
+        rm -f .gitmodules
+        rm -rf pr-templates
+        echo "**** Cleaning Complete! ****"
+      
+    - name: Push to new-pr-template branch
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: pr-templates-updated
+        branch: new-pr-templates
+        create_branch: true
+        push_options: --force
+
+    - name: Create PR from new-pr-template branch
+      uses: devops-infra/action-pull-request@v0.5.5
+      with:
+        github_token: ${{ secrets.TEST_ACTION }}
+        source_branch: new-pr-templates
+        target_branch: main
+        title: New Updates
+
