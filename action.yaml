@@ -1,22 +1,22 @@
-name: 'Standardize Repository'
-description: 'Sync common files of repos'
+name: 'SRE Metadata Update'
+description: 'Sync common files of a repository'
 inputs:
   repo-type:
     required: true
     description: Repository Type
     default: 'terraform'
-  test-action:
+  github-token:
     required: true
 
 runs:
   using: composite
   steps:
-    - name: Update PR Templates
+    - name: Fetching Updated Common Files
       shell: bash
       run: | 
-        git submodule add https://github.com/tahsib-optimizely/sre-default-github-action.git sre-default
+        git submodule add https://github.com/tahsib-optimizely/sre-metadata-github-action.git sre-metadata
         shopt -s dotglob
-        dir=sre-default/repo-types/${{ inputs.repo-type }}
+        dir=sre-metadata/repo-types/${{ inputs.repo-type }}
         
         mkdir -p .github/
 
@@ -37,26 +37,26 @@ runs:
       shell: bash
       run: |
         echo "**** Cleaning up submodules ****"
-        git submodule deinit -f -- sre-default    
-        git rm --cached sre-default    
-        rm -rf .git/modules/sre-default
+        git submodule deinit -f -- sre-metadata    
+        git rm --cached sre-metadata    
+        rm -rf .git/modules/sre-metadata
         rm -f .gitmodules
-        rm -rf sre-default
+        rm -rf sre-metadata
         echo "**** Cleaning Complete! ****"
       
-    - name: Push to new-pr-template branch
+    - name: Push To sre-metadata-update Branch
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: sre metadata updated
-        branch: update-sre-default
+        branch: sre-metadata-update
         create_branch: true
         push_options: --force
 
-    - name: Create PR from new-pr-template branch
+    - name: Create PR From sre-metadata-update To main
       uses: devops-infra/action-pull-request@v0.5.5
       with:
-        github_token: ${{ inputs.test-action }}
-        source_branch: update-sre-default
+        github_token: ${{ inputs.github-token }}
+        source_branch: sre-metadata-update
         target_branch: main
         title: SRE Metadata Updated
 
