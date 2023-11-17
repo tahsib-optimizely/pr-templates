@@ -6,6 +6,7 @@ inputs:
     description: 'Repository Type'
     default: 'terraform'
   pre-commit-config:
+    required: true
     description: 'Pre Commit Config'
     default: 'default'
   github-token:
