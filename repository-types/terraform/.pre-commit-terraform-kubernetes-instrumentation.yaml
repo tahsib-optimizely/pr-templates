@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+        exclude: README.md ### terraform-docs always leaves a new line at the end
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-json
+      - id: pretty-format-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: detect-private-key
+  - repo: https://github.com/gruntwork-io/pre-commit
+    rev: v0.1.21
+    hooks:
+      - id: terraform-fmt
+      #- id: terraform-validate
+      - id: shellcheck
+      #- id: markdown-link-check
+  - repo: https://github.com/terraform-docs/terraform-docs
+    rev: v0.16.0
+    hooks:
+      - id: terraform-docs-go
+        args: ["markdown", "table", "./"]

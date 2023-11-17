@@ -1,10 +1,13 @@
 name: 'SRE Metadata Update'
 description: 'Sync common files of a repository'
 inputs:
-  repo-type:
+  repository-type:
     required: true
-    description: Repository Type
+    description: 'Name of the Repository Type folder'
     default: 'terraform'
+  pre-commit-config:
+    description: 'Name of the pre-commit-config file for your repository'
+    default: 'config'
   github-token:
     required: true
 
@@ -16,21 +19,30 @@ runs:
       run: | 
         git submodule add https://github.com/tahsib-optimizely/sre-metadata-github-action.git sre-metadata
         shopt -s dotglob
-        dir=sre-metadata/repo-types/${{ inputs.repo-type }}
+        dir=sre-metadata/repository-types/${{ inputs.repository-type }}
         
         mkdir -p .github/
 
-        prtemplate=$(find ./$dir -type f -iname "pull_request_template*")
+        prTemplate=$(find ./$dir -type f -iname "pull_request_template*")
         codeowners=$(find ./$dir -type f -iname "CODEOWNERS")
+        preCommitConfig=$(find ./$dir -type f -iname "*pre-commit-${{ inputs.pre-commit-config }}.yaml")
 
-        if test ${prtemplate}; then
-            mv -f ${prtemplate} .github/PULL_REQUEST_TEMPLATE
+        if test ${prTemplate}; then
+            echo '=====> PULL_REQUEST_TEMPLATE file added !'
+            mv -f ${prTemplate} .github/PULL_REQUEST_TEMPLATE
         fi
 
         if test ${codeowners}; then
+            echo '====> CODEOWNERS file added !'
             mv -f ${codeowners} .github/CODEOWNERS
         fi
 
+        if test ${preCommitConfig}; then
+            echo '====> .pre-commit-config.yaml file added !'
+            mv -f ${preCommitConfig} .github/.pre-commit-config.yaml
+        fi
+
+        find ./$dir -type f -iname "*pre-commit*" -exec rm {} +
         mv -f ./$dir/*  ./
 
     - name: Clean Up Submodule
