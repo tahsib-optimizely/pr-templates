@@ -3,11 +3,11 @@ description: 'Sync common files of a repository'
 inputs:
   repository-type:
     required: true
-    description: 'Name of the Repository Type folder'
+    description: 'Repository Type'
     default: 'terraform'
   pre-commit-config:
-    description: 'Name of the pre-commit-config file for your repository'
-    default: 'config'
+    description: 'Pre Commit Config'
+    default: 'default'
   github-token:
     required: true
 
