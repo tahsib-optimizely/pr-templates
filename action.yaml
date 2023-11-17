@@ -28,7 +28,7 @@ runs:
         codeowners=$(find ./$dir -type f -iname "CODEOWNERS")
         preCommitConfig=$(find ./$dir -type f -iname "*pre-commit-${{ inputs.pre-commit-config }}.yaml")
         echo ${preCommitConfig}
-        
+
         if test ${prTemplate}; then
             echo '=====> PULL_REQUEST_TEMPLATE file added !'
             mv -f ${prTemplate} .github/PULL_REQUEST_TEMPLATE
@@ -40,9 +40,8 @@ runs:
         fi
 
         if test ${preCommitConfig}; then
-            shopt -s dotglob
             echo '====> .pre-commit-config.yaml file added !'
-            mv -f ${preCommitConfig} .github/.pre-commit-config.yaml
+            mv -f ${preCommitConfig} .pre-commit-config.yaml
         fi
 
         find ./$dir -type f -iname "*pre-commit*" -exec rm {} +
