@@ -43,7 +43,14 @@ runs:
         fi
 
         find ./$dir -type f -iname "*pre-commit*" -exec rm {} +
-        mv -f ./$dir/*  ./
+        
+        if [ -z "$(ls -A ./$dir)" ]; then
+          echo "Nothing else to copy"
+        else
+          mv -f ./$dir/*  ./
+        fi
+
+        
 
     - name: Clean Up Submodule
       shell: bash
