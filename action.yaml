@@ -39,6 +39,7 @@ runs:
         fi
 
         if test ${preCommitConfig}; then
+            shopt -s dotglob
             echo '====> .pre-commit-config.yaml file added !'
             mv -f ${preCommitConfig} .github/.pre-commit-config.yaml
         fi
